@@ -13,7 +13,8 @@ export default function ShadowSelfApp() {
   const [journalEntries, setJournalEntries] = useState([]);
   const [todayCheckIn, setTodayCheckIn] = useState(null);
   const [streak, setStreak] = useState({ current: 0, best: 0 });
-
+  const [accessGranted, setAccessGranted] = useState(false);
+  
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -86,7 +87,8 @@ export default function ShadowSelfApp() {
     );
   }
 
-  if (!user) return <AuthScreen onAuthSuccess={setUser} />;
+  if (!accessGranted) return <PasswordGate onSuccess={() => setAccessGranted(true)} />;
+if (!user) return <AuthScreen onAuthSuccess={setUser} />;
 
   const screens = {
     checkin: <CheckInScreen user={user} checkIns={checkIns} todayCheckIn={todayCheckIn} onCheckInComplete={loadUserData} />,
@@ -472,6 +474,90 @@ function CalendarScreen({ checkIns }) {
           })}
         </div>
       )}
+    </div>
+  );
+}
+function PasswordGate({ onSuccess }) {
+  const [input, setInput] = React.useState('');
+  const [error, setError] = React.useState(false);
+  const ACCESS_CODE = 'ALPHA2026';
+
+  const handleSubmit = () => {
+    if (input.trim().toUpperCase() === ACCESS_CODE) {
+      onSuccess();
+    } else {
+      setError(true);
+    }
+  };
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#0f0f0f',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: 'Inter, system-ui, sans-serif'
+    }}>
+      <div style={{
+        backgroundColor: '#1a1a1a',
+        border: '1px solid #2a2a2a',
+        borderRadius: '12px',
+        padding: '48px',
+        width: '100%',
+        maxWidth: '400px',
+        textAlign: 'center'
+      }}>
+        <Moon size={40} color="#c41e3a" style={{ margin: '0 auto 20px' }} />
+        <h1 style={{ color: '#e8e8e8', fontSize: '22px', fontWeight: '700', marginBottom: '8px' }}>
+          Shadow Self AI
+        </h1>
+        <p style={{ color: '#a0a0a0', fontSize: '14px', marginBottom: '32px' }}>
+          Enter your access code to continue
+        </p>
+        <input
+          type="text"
+          placeholder="Access code"
+          value={input}
+          onChange={(e) => { setInput(e.target.value); setError(false); }}
+          onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(); }}
+          style={{
+            width: '100%',
+            padding: '12px 16px',
+            backgroundColor: '#0f0f0f',
+            border: error ? '1px solid #c41e3a' : '1px solid #2a2a2a',
+            borderRadius: '8px',
+            color: '#e8e8e8',
+            fontSize: '16px',
+            marginBottom: '12px',
+            boxSizing: 'border-box',
+            textAlign: 'center',
+            letterSpacing: '0.1em'
+          }}
+        />
+        {error && (
+          <p style={{ color: '#c41e3a', fontSize: '13px', marginBottom: '12px' }}>
+            Invalid access code. Check your email.
+          </p>
+        )}
+        <button
+          onClick={handleSubmit}
+          style={{
+            width: '100%',
+            padding: '14px',
+            backgroundColor: '#c41e3a',
+            color: '#fff',
+            fontWeight: '700',
+            fontSize: '15px',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            letterSpacing: '0.05em'
+          }}
+        >
+          ACCESS NOW →
+        </button>
+      </div>
     </div>
   );
 }
