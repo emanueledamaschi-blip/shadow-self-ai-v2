@@ -154,7 +154,7 @@ function CheckInScreen({ user, checkIns, todayCheckIn, onCheckInComplete }) {
     try {
       const response = {
         analysis: `Your rage is at ${rage}/10 ${rage >= 7 ? '- elevated but manageable' : rage >= 4 ? '- moderate level' : '- under control'}. ${control >= 7 ? 'Strong impulse control maintained.' : 'Working on impulse control.'}`,
-        meditation: rage >= 7 ? 'Control Over Chaos' : rage >= 4 ? 'Impulse Interrupt' : 'Silent Authority',
+        meditation: rage >= 7 ? 'Instant Calm Reset' : rage >= 4 ? 'Impulse Interrupt' : 'Night Spiral Stop',
         journalPrompt: rage >= 7 ? 'What is this rage protecting me from?' : 'What truth am I avoiding today?',
         warning: rage >= 7 && checkIns.filter(c => c.rage_level >= 7).length >= 2 ? 'Pattern alert: Rage elevated for 3+ days' : null
       };
@@ -218,7 +218,7 @@ function CheckInScreen({ user, checkIns, todayCheckIn, onCheckInComplete }) {
         <div style={{ backgroundColor: '#1a1a1a', padding: '30px', borderRadius: '8px', border: '2px solid #c41e3a', marginTop: '32px' }}>
           <h3 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}><Brain size={24} color="#c41e3a" /> AI Shadow Guide</h3>
           <div style={{ marginBottom: '20px' }}><h4 style={{ fontSize: '14px', color: '#a0a0a0', marginBottom: '8px' }}>🌑 SHADOW ANALYSIS</h4><p style={{ fontSize: '16px', lineHeight: '1.6' }}>{aiResponse.analysis}</p></div>
-          <div style={{ marginBottom: '20px' }}><h4 style={{ fontSize: '14px', color: '#a0a0a0', marginBottom: '8px' }}>💡 RECOMMENDED ACTION</h4><p style={{ fontSize: '16px', lineHeight: '1.6' }}>→ Meditation: "{aiResponse.meditation}" (8 min)<br/>→ Journal prompt: "{aiResponse.journalPrompt}"</p></div>
+          <div style={{ marginBottom: '20px' }}><h4 style={{ fontSize: '14px', color: '#a0a0a0', marginBottom: '8px' }}>💡 RECOMMENDED ACTION</h4><p style={{ fontSize: '16px', lineHeight: '1.6' }}>→ Meditation: "${aiResponse.meditation}" (4 min)<br/>→ Journal prompt: "{aiResponse.journalPrompt}"</p></div>
           {aiResponse.warning && <div style={{ backgroundColor: '#2a1a1a', padding: '16px', borderRadius: '6px', borderLeft: '4px solid #ffa726' }}><h4 style={{ fontSize: '14px', color: '#ffa726', marginBottom: '8px' }}>⚠️ WARNING PATTERN</h4><p style={{ fontSize: '16px' }}>{aiResponse.warning}</p></div>}
           {integration.includes('Observed without acting') && <div style={{ backgroundColor: '#1a2a1a', padding: '16px', borderRadius: '6px', borderLeft: '4px solid #4caf50', marginTop: '16px' }}><h4 style={{ fontSize: '14px', color: '#4caf50', marginBottom: '8px' }}>✓ INTEGRATION NOTE</h4><p style={{ fontSize: '16px' }}>You observed without acting - this IS the work.</p></div>}
         </div>
@@ -413,8 +413,8 @@ function JournalScreen({ user, entries, onEntryAdded }) {
 function GuideScreen({ checkIns }) {
   const today = checkIns[0];
   if (!today) return (<div style={{ textAlign: 'center', padding: '60px 20px' }}><Brain size={48} color="#c41e3a" style={{ margin: '0 auto 20px' }} /><h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '12px' }}>Complete Your First Check-In</h2><p style={{ color: '#a0a0a0' }}>The AI Guide needs your data to provide personalized recommendations</p></div>);
-  const meditation = today.rage_level >= 7 ? 'Control Over Chaos' : today.rage_level >= 4 ? 'Impulse Interrupt' : 'Silent Authority';
-  const duration = today.rage_level >= 7 ? '8 min' : '5 min';
+  const meditation = today.rage_level >= 7 ? 'Instant Calm Reset' : today.rage_level >= 4 ? 'Impulse Interrupt' : 'Night Spiral Stop';
+  const duration = '4 min';
   const prompt = today.ai_response?.journalPrompt || 'What is my shadow trying to tell me?';
   const physical = today.rage_level >= 7 ? '50 push-ups or 5-min cold shower' : '20 push-ups or brisk walk';
   const recentHighRage = checkIns.slice(0, 3).filter(c => c.rage_level >= 6).length;
